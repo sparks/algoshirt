@@ -3,4 +3,7 @@
 *.pyc
 *.pyo
 
+*.db
+
+backends-data
 renders
