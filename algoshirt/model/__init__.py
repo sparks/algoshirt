@@ -30,6 +30,7 @@ class AlgoshirtModel(object):
         self.engine = create_engine(dburl)
         self.Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(self.engine)
+    
     def subscribers(self):
         return self.Session().query(Subscriber).all()
 

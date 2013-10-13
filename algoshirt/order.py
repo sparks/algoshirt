@@ -1,16 +1,21 @@
 from backends.shirtsio import ShirtsIOBatch
 from model import AlgoshirtModel
-import sys
+import sys, argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("imgfile", type=str, help="the image file for the order")
+parser.add_argument("db", type=str, help="the database of subscribers")
+parser.add_argument("apikey", type=str, help="the shirts.io API key")
 
 if __name__ == "__main__":
-    imgfile = sys.argv[1]
-    db = sys.argv[2]
-    apikey = sys.argv[3]
+	args = parser.parse_args()
 
-    model = AlgoshirtModel(db)
-    batch = ShirtsIOBatch(imgfile, model.subscribers(), apikey)
+	model = AlgoshirtModel("sqlite:///"+args.db)
+	batch = ShirtsIOBatch(args.imgfile, model.subscribers(), args.apikey)
 
-    quote = batch.quote()
-    print(quote["total"])
-    batch.order(quote)
-    # batch.order({"total":10.00})
+	quote = batch.quote()
+
+	print("Shirts.IO quote: "+str(quote["total"]))
+	test = raw_input("Confirm order ...")
+
+	batch.order(quote)

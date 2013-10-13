@@ -3,7 +3,7 @@ import cairo, math, argparse, os, uuid
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-uuid", type=str, default=str(uuid.uuid4()), help="(optional) uuid for this run")
-parser.add_argument("-rd", "--renders_dir", type=str, default="../renders", help="directory to put renders in")
+parser.add_argument("-rd", "--renders_dir", type=str, default="../../renders", help="directory to put renders in")
 parser.add_argument("proof", type=str, help="the algorithm to generate with")
 parser.add_argument("design", type=str, help="the self-describing json parameters for the algorithm")
 

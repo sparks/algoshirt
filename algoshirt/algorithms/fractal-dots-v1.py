@@ -29,7 +29,7 @@ def circle(matrix, number, angle, scale, distance, fill_hue, fill_hue_incr, stro
 		circle(sub_matrix, number, angle, scale, distance, fill_hue+fill_hue_incr, fill_hue_incr, stroke_hue+stroke_hue_incr, stroke_hue_incr, depth+1, max_depth)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-rd", "--renders_dir", type=str, default="../renders", help="directory to put renders in")
+parser.add_argument("-rd", "--renders_dir", type=str, default="../../renders", help="directory to put renders in")
 parser.add_argument("-uuid", type=str, default=str(uuid.uuid4()), help="(optional) uuid for this run")
 parser.add_argument("params", type=str, default="./fractal-dots-v1-params.json", help="configuration parameters for the algorithm")
 
