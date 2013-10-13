@@ -1,0 +1,90 @@
+{
+	"width":
+		{
+			"value": 2000,
+			"type": "int",
+			"min": 100,
+			"max": 4000,
+			"automate": "false"
+		},
+	"height":
+		{
+			"value": 2000,
+			"type": "int",
+			"min": 100,
+			"max": 4000,
+			"automate": "false"
+		},
+	"fill_hue":
+		{
+			"value": 0,
+			"type": "float",
+			"min": 0,
+			"max": 1,
+			"automate": "true"
+		},
+	"fill_hue_incr":
+		{
+			"value": 0.713,
+			"type": "float",
+			"min": 0,
+			"max": 1,
+			"automate": "true"
+		},
+	"stroke_hue":
+		{
+			"value": 0,
+			"type": "float",
+			"min": 0,
+			"max": 1,
+			"automate": "true"
+		},
+	"stroke_hue_incr":
+		{
+			"value": 0.11,
+			"type": "float",
+			"min": 0,
+			"max": 1,
+			"automate": "true"
+		},
+	"number":
+		{
+			"value": 20,
+			"type": "int",
+			"min": 2,
+			"max": 30,
+			"automate": "true"
+		},
+	"angle":
+		{
+			"value": 0.31,
+			"type": "float",
+			"min": 0,
+			"max": 3.141592,
+			"automate": "true"
+		},
+	"scale":
+		{
+			"value": 0.4,
+			"type": "float",
+			"min": 0,
+			"max": 1,
+			"automate": "true"
+		},
+	"distance":
+		{
+			"value": 6,
+			"type": "float",
+			"min": 1,
+			"max": 6,
+			"automate": "true"
+		},
+	"depth":
+		{
+			"value": 4,
+			"type": "int",
+			"min": 1,
+			"max": 6,
+			"automate": "true"
+		}
+}
