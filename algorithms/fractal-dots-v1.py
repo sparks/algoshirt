@@ -42,7 +42,7 @@ if __name__ == "__main__":
 	params = json.load(json_params)
 	json_params.close()
 
-	filename = "fractal1-"+str(uuid.uuid4())
+	filename = "fractal-dots-v1-"+str(uuid.uuid4())
 	png_path = os.path.join(renders_dir, filename+".png")
 	svg_path = os.path.join(renders_dir, filename+".svg")
 
