@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import cairo, os, math, uuid, argparse, colorsys, json
 
 def circle(matrix, number, angle, scale, distance, fill_hue, fill_hue_incr, stroke_hue, stroke_hue_incr, depth, max_depth):
@@ -38,9 +39,9 @@ if __name__ == "__main__":
 	if not os.path.exists(renders_dir):
 		os.makedirs(renders_dir)
 
-	json_params = open(args.params)
-	params = json.load(json_params)
-	json_params.close()
+	params_file = open(args.params)
+	params = json.load(params_file)
+	params_file.close()
 
 	filename = "fractal-dots-v1-"+str(uuid.uuid4())
 	png_path = os.path.join(renders_dir, filename+".png")
