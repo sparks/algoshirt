@@ -26,8 +26,8 @@ class Subscriber(Base):
         return "<User({}, '{}')>".format(self.id, self.name)
 
 class AlgoshirtModel(object):
-    def __init__(self, dbfile):
-        self.engine = create_engine('sqlite:///' + dbfile)
+    def __init__(self, dburl):
+        self.engine = create_engine(dburl)
         self.Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(self.engine)
     def subscribers(self):
