@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-import subprocess, argparse, random, json
+import subprocess, argparse, random, json, os, uuid
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-rd", "--renders_dir", type=str, default="../renders", help="directory to put renders in")
 parser.add_argument("command", type=str, help="the algorithm to generate with")
 parser.add_argument("params", type=str, help="the self-describing json parameters for the algorithm")
 
@@ -19,7 +20,6 @@ if __name__ == "__main__":
 		type = params[key]["type"]
 		
 		if type != "float" and type != "int":
-			print "bounce"
 			continue
 
 		min_val = params[key]["min"]
@@ -30,12 +30,17 @@ if __name__ == "__main__":
 		if type == "int":
 			params[key]["value"] = int(params[key]["value"])
 
-	params_file = open("tmp.json", "w")
+	uuid_str = str(uuid.uuid4())
+	filename = "random-optimizer-params-"+uuid_str+".json"
+
+	param_filename = os.path.join(args.renders_dir, filename)
+	params_file = open(param_filename, "w")
 	json.dump(params, params_file)
 	params_file.close()
 
-	result = subprocess.check_output([args.command, "./tmp.json"])
+	result = subprocess.check_output([args.command, "-u", uuid_str, "-rd", args.renders_dir, param_filename])
 	files = result.split("\n")
 	for file in files:
 		if len(file) > 0:
 			print file
+	print param_filename
