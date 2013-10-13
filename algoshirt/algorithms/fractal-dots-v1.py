@@ -30,7 +30,7 @@ def circle(matrix, number, angle, scale, distance, fill_hue, fill_hue_incr, stro
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-rd", "--renders_dir", type=str, default="../renders", help="directory to put renders in")
-parser.add_argument("-uuid", type=str, default="", help="(optional) uuid for this run")
+parser.add_argument("-uuid", type=str, default=str(uuid.uuid4()), help="(optional) uuid for this run")
 parser.add_argument("params", type=str, default="./fractal-dots-v1-params.json", help="configuration parameters for the algorithm")
 
 if __name__ == "__main__":
@@ -44,12 +44,7 @@ if __name__ == "__main__":
 	params = json.load(params_file)
 	params_file.close()
 
-	filename = "fractal-dots-v1-"
-	
-	if args.uuid == "":
-		filename = filename+str(uuid.uuid4())
-	else:
-		filename = filename+args.uuid
+	filename = "fractal-dots-v1-"+args.uuid
 
 	png_path = os.path.join(renders_dir, filename+".png")
 	svg_path = os.path.join(renders_dir, filename+".svg")
