@@ -5,9 +5,9 @@ import os
 import json
 import requests
 
-#API_V1 = "https://www.shirts.io/api/v1"
+API_V1 = "https://www.shirts.io/api/v1"
 #API_V1 = "http://localhost:8080"
-API_V1 = "http://localhost:1234"
+# API_V1 = "http://localhost:1234"
 
 def shirtsio_encode_r(base, node, result):
     if isinstance(node, dict):
@@ -103,11 +103,11 @@ class ShirtsIOBatch(object):
         fields["test"] = test
         fields["price"] = quote["total"]
 
-        r = requests.post(API_V1 + "/order",
-                files={"print[front][artwork]": open("backends/shirtsio.py", 'rb')},
+        r = requests.post(API_V1 + "/order/",
+                files={"print[front][artwork]": open(self.imagefile, 'rb'), "print[front][proof]": open(self.imagefile, 'rb')},
                 data=shirtsio_encode(fields))
 
         print r.status_code
         print r.url
-        #print r.text
+        print r.text
         return json.loads(r.text).get("result")

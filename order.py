@@ -10,7 +10,7 @@ if __name__ == "__main__":
     model = AlgoshirtModel(db)
     batch = ShirtsIOBatch(imgfile, model.subscribers(), apikey)
 
-    #quote = batch.quote()
-    #print(quote["total"])
-    #batch.order(quote)
-    batch.order({"total":10.00})
+    quote = batch.quote()
+    print(quote["total"])
+    batch.order(quote)
+    # batch.order({"total":10.00})
