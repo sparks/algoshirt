@@ -1,4 +1,4 @@
-import cairo, os, math, uuid, argparse, colorsys, random, json
+import cairo, os, math, uuid, argparse, colorsys, json
 
 def circle(matrix, number, angle, scale, distance, fill_hue, fill_hue_incr, stroke_hue, stroke_hue_incr, depth, max_depth):
 	if depth >= max_depth:
@@ -29,7 +29,7 @@ def circle(matrix, number, angle, scale, distance, fill_hue, fill_hue_incr, stro
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-rd", "--renders_dir", type=str, default="../renders", help="directory to put renders in")
-parser.add_argument("params", type=str, default="./params.json", help="configuration parameters for the algorithm")
+parser.add_argument("params", type=str, default="./fractal-dots-v1-params.json", help="configuration parameters for the algorithm")
 
 if __name__ == "__main__":
 	args = parser.parse_args()
@@ -46,21 +46,21 @@ if __name__ == "__main__":
 	png_path = os.path.join(renders_dir, filename+".png")
 	svg_path = os.path.join(renders_dir, filename+".svg")
 
-	width  = params["width"]
-	height = params["height"]
+	width  = params["width"]["value"]
+	height = params["height"]["value"]
 
 	ps = cairo.SVGSurface(svg_path, width, height)
 	cr = cairo.Context(ps)
 
-	fill_hue        = params["fill_hue"]
-	fill_hue_incr   = params["fill_hue_incr"]
-	stroke_hue      = params["stroke_hue"]
-	stroke_hue_incr = params["stroke_hue_incr"]
-	number          = params["number"]
-	angle           = params["angle"]
-	scale           = params["scale"]
-	distance        = params["distance"]
-	depth           = params["depth"]
+	fill_hue        = params["fill_hue"]["value"]
+	fill_hue_incr   = params["fill_hue_incr"]["value"]
+	stroke_hue      = params["stroke_hue"]["value"]
+	stroke_hue_incr = params["stroke_hue_incr"]["value"]
+	number          = params["number"]["value"]
+	angle           = params["angle"]["value"]
+	scale           = params["scale"]["value"]
+	distance        = params["distance"]["value"]
+	depth           = params["depth"]["value"]
 
 	cr.translate(width/2, height/2)
 	circle(cr.get_matrix(), number, angle, scale, distance, fill_hue, fill_hue_incr, stroke_hue, stroke_hue_incr, 0, depth)

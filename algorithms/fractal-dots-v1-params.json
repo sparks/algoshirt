@@ -1,13 +1,79 @@
 {
-	"width":           2000,
-	"height":          2000,
-	"fill_hue":        0,
-	"fill_hue_incr":   0.713,
-	"stroke_hue":      0,
-	"stroke_hue_incr": 0.11,
-	"number":          20,
-	"angle":           0.31,
-	"scale":           0.5,
-	"distance":        6,
-	"depth":           4
+	"width":
+		{
+			"value": 2000,
+			"type": "int",
+			"min": 100,
+			"max": 4000
+		},
+	"height":
+		{
+			"value": 2000,
+			"type": "int",
+			"min": 100,
+			"max": 4000
+		},
+	"fill_hue":
+		{
+			"value": 0,
+			"type": "float",
+			"min": 0,
+			"max": 1
+		},
+	"fill_hue_incr":
+		{
+			"value": 0.713,
+			"type": "float",
+			"min": 0,
+			"max": 1
+		},
+	"stroke_hue":
+		{
+			"value": 0,
+			"type": "float",
+			"min": 0,
+			"max": 1
+		},
+	"stroke_hue_incr":
+		{
+			"value": 0.11,
+			"type": "float",
+			"min": 0,
+			"max": 1
+		},
+	"number":
+		{
+			"value": 20,
+			"type": "float",
+			"min": 1,
+			"max": 30
+		},
+	"angle":
+		{
+			"value": 0.31,
+			"type": "float",
+			"min": 0,
+			"max": 3.141592
+		},
+	"scale":
+		{
+			"value": 0.4,
+			"type": "float",
+			"min": 0,
+			"max": 1
+		},
+	"distance":
+		{
+			"value": 6,
+			"type": "float",
+			"min": 1,
+			"max": 6
+		},
+	"depth":
+		{
+			"value": 4,
+			"type": "float",
+			"min": 1,
+			"max": 6
+		}
 }
