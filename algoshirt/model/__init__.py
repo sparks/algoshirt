@@ -15,6 +15,7 @@ class Subscriber(Base):
      address2 = Column(String)
      city = Column(String)
      state = Column(String)
+     country = Column(String)
      postcode = Column(String)
      size = Column(String)
      active = Column(Boolean)
@@ -33,5 +34,8 @@ class AlgoshirtModel(object):
     
     def subscribers(self):
         return self.Session().query(Subscriber).all()
+
+    def subscriber(self, id):
+        return self.Session().query(Subscriber).filter(Subscriber.id == id).first()
 
 

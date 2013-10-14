@@ -65,6 +65,7 @@ class ShirtsIOBatch(object):
             address["address2"] = subscriber.address2
             address["city"] = subscriber.city
             address["state"] = subscriber.state
+            address["country"] = subscriber.country
             address["zip"] = subscriber.postcode
             fields["addresses"].append(address)
 
@@ -95,6 +96,7 @@ class ShirtsIOBatch(object):
             address["address2"] = subscriber.address2
             address["city"] = subscriber.city
             address["state"] = subscriber.state
+            address["country"] = subscriber.country
             address["zip"] = subscriber.postcode
             fields["addresses"].append(address)
 
