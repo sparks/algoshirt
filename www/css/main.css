@@ -1,0 +1,56 @@
+body {
+	margin: 0;
+	padding: 50px 0 50px 0;
+}
+
+.stripe {
+	width: 100%;
+	text-align: center;
+	background-color: #DDD;
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+#menu {
+	font-size: 14pt;
+	text-align: center;
+}
+
+#menu ul {
+	margin: 0 auto 0 auto;
+	padding: 0;
+}
+
+#menu ul li {
+	display: inline;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #FFF;
+}
+
+#menu ul li:hover {
+	background-color: #EEE;
+}
+
+.stripe .content {
+	width: 600px;
+	margin: auto;
+	text-align: left;
+}
+
+.form h3 {
+	margin-bottom: 15px;
+}
+
+.form label {
+	text-align: left;
+	font-weight: bold;
+}
+
+.form .confirm {
+	margin-top: 20px;
+}
+
+.subscriber {
+	margin: 40px auto 40px auto;
+}

@@ -1,0 +1,58 @@
+<div ng-controller="SubscribeCtrl">
+	<form name="subscribeForm" class="form">
+		<h3>Subscribe</h3>
+		<fieldset class="row-fluid">
+			<div class="span6">
+				<label for="name">Name</label>
+				<input type="text" name="name" id="name" placeholder="Name..." ng-model="subscriber.name" required>
+
+				<label for="size">Size</label>
+				<select name="size" id="size" ng-model="subscriber.size" required>
+					<option value="" disabled="disabled" selected="selected">Select your size</option>
+					<option value="xxsml">2X Small</option>
+					<option value="xsml">X Small</option>
+					<option value="sml">Small</option>
+					<option value="med">Medium</option>
+					<option value="lrg">Large</option>
+					<option value="xlg">X Large</option>
+					<option value="xxl">2X Large</option>
+					<option value="xxxl">3X Large</option>
+					<option value="xxxxl">4X Large</option>
+					<option value="xxxxxl">5X Large</option>
+					<option value="xxxxxxl">6X Large</option>
+					<option value="generic">Generic</option>
+				</select>
+
+				<!-- <label for="style">Garment Style</label>
+				<select name="style" id="style" ng-model="subscriber.style">
+					<option value="" disabled="disabled" selected="selected">Select your garment</option>
+					<option value="t-shirt" selected="selected">T-Shirt</option>
+				</select> -->
+
+				<label for="address">Address Line 1</label>
+				<input type="text" name="address" id="address" placeholder="Address..." ng-model="subscriber.address" required>
+				<label for="address2">Address Line 2</label>
+				<input type="text" name="address2" id="address2" placeholder="" ng-model="subscriber.address2">
+			</div>
+
+			<div class="span6">
+				<!-- <label for="company">Company</label>
+				<input type="text" name="company" id="company" placeholder="Company..." ng-model="subscriber.company"> -->
+
+				<label for="city">City</label>
+				<input type="text" name="city" id="city" placeholder="City..." ng-model="subscriber.city" required>
+				<label for="state">State/Province</label>
+				<input type="text" name="state" id="state" placeholder="State/Province..." ng-model="subscriber.state" required>
+				<label for="postcode">Zip/Postal Code</label>
+				<input type="text" name="postcode" id="postcode" placeholder="Zip/Postal Code..." ng-model="subscriber.postcode" required>
+				<label for="country">Country</label>
+				<input type="text" name="country" id="country" placeholder="Country..." ng-model="subscriber.country" required>
+			</div>
+		</fieldset>
+		<fieldset class="row-fluid">
+			<div class="span12 confirm">
+				<button class="btn btn-primary" ng-click="subscribe()" ng-disabled="subscribeForm.$invalid">Subscribe</button>
+			</div>
+		</fieldset>
+	</form>
+</div>

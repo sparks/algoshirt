@@ -1,0 +1,17 @@
+<div ng-controller="SubscriberCtrl">
+	<div class="subscriber" ng-repeat="subscriber in subscribers">
+		<h3><a href="#subscribers/{{subscriber.id}}"/>{{subscriber.name}}</a></h3>
+		<h4>Details</h4>
+		<p>Shirt size: {{subscriber.size}}</p>
+		<h4>Address</h4>
+		<pre>{{subscriber.address}}
+{{subscriber.address2}}
+{{subscriber.city}}
+{{subscriber.state}}
+{{subscriber.postcode}}
+{{subscriber.country}}</pre>
+		<div>
+			<button class="btn btn-danger" ng-click="delete(subscriber)">Delete</button>
+		</div>
+	</div>
+</div>

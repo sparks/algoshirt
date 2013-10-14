@@ -1,31 +1,17 @@
 import cherrypy
-from ..model import AlgoshirtModel
+from ..model import AlgoshirtModel, Subscriber
 from mako.template import Template
 import json
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class AppGlobals(object):
     pass
 g = AppGlobals()
 
 class Root(object):
-    @cherrypy.expose
-    def index(self):
-        return "Hello, World!"
-
-    @cherrypy.expose
-    def subscribers(self):
-        tmpl = """
-        <html>
-        <body>
-        <ul>
-        % for subscriber in subscribers:
-           <li>${subscriber.name}</li> 
-        % endfor
-        </ul>
-        </body>
-        </html>
-        """
-        return Template(tmpl).render(subscribers=g.model.subscribers())
+    pass
 
 class API(object):
     pass
@@ -36,45 +22,39 @@ class Subscribers(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def GET(self, id=None):
+        self.CORS()
         if id == None:
             out = []
             subscribers = g.model.subscribers()
             for subscriber in subscribers:
-                sobj = {
-                    "id": subscriber.id,
-                    "name": subscriber.name,
-                    "company": subscriber.company,
-                    "size": subscriber.size,
-                    "address": subscriber.address,
-                    "address2": subscriber.address2,
-                    "city": subscriber.city,
-                    "state": subscriber.state,
-                    "postcode": subscriber.postcode,
-                    "country": subscriber.country,
-                    "active": subscriber.active
-                }
-                out.append(sobj)
+                out.append(subscriber.to_dict())
             return out
         else:
             subscriber = g.model.subscriber(int(id))
-            sobj = {
-                "id": subscriber.id,
-                "name": subscriber.name,
-                "company": subscriber.company,
-                "size": subscriber.size,
-                "address": subscriber.address,
-                "address2": subscriber.address2,
-                "city": subscriber.city,
-                "state": subscriber.state,
-                "postcode": subscriber.postcode,
-                "country": subscriber.country,
-                "active": subscriber.active
-            }
-            return sobj
+            return subscriber.to_dict()
 
     @cherrypy.expose
-    def POST(self, name, company, size, address, address2, city, subscriber, postcode, country, active):
-        return "Create subs"
+    @cherrypy.tools.json_out()
+    def POST(self):
+        self.CORS()
+        info = json.load(cherrypy.request.body)
+        subscriber = Subscriber(info=info)
+        g.model.addSubscriber(subscriber)
+        return subscriber.to_dict()
+
+    @cherrypy.expose
+    def DELETE(self, id=None):
+        self.CORS()
+        g.model.removeSubscriber(id)
+
+    @cherrypy.expose
+    def OPTIONS(self, id=None):
+        self.CORS()
+        return ""
+
+    def CORS(self):
+        cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
+        cherrypy.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, X-PINGOTHER"
 
 def serve(config):
     root = Root()
@@ -95,7 +75,6 @@ def serve(config):
             {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}
         }
     )
-
     cherrypy.engine.start()
     cherrypy.engine.block()
 

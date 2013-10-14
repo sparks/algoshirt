@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang='en' ng-app='algoshirt'>
+<head>
+
+	<title>Algoshirt</title>
+
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap-responsive.css">
+
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+	<script src="/vendor/angular/angular.js"></script>
+	<script src="/vendor/angular/angular-resource.js"></script>
+	<script src="/vendor/angular/ui-bootstrap-tpls.js"></script>
+	<script src="/js/algoshirt.js"></script>
+
+</head>
+<body>
+	<div class="stripe">
+		<div class="content">
+			<div id="menu">
+			<ul>
+				<li><a href="#/subscribe">Subscribe</a></li>
+				<li><a href="#/subscribers">Subscribers</a></li>
+				<li><a href="#/order">Order</a></li>
+			</ul>
+			</div>
+			<div ng-view></div>
+		</div>
+	</div>
+</body>
+</html>
+
+<!-- 
+id INTEGER NOT NULL, 
+name VARCHAR, 
+company VARCHAR, 
+address VARCHAR, 
+address2 VARCHAR, 
+city VARCHAR, 
+state VARCHAR, 
+postcode VARCHAR, 
+size VARCHAR, 
+active BOOLEAN, 
+PRIMARY KEY (id), 
+CHECK (active IN (0, 1)) -->
