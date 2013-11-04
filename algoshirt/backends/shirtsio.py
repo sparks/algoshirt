@@ -6,8 +6,6 @@ import json
 import requests
 
 API_V1 = "https://www.shirts.io/api/v1"
-#API_V1 = "http://localhost:8080"
-# API_V1 = "http://localhost:1234"
 
 def shirtsio_encode_r(base, node, result):
     if isinstance(node, dict):
