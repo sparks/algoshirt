@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from algoshirt.algorithms import TopoRenderer
 import cairo
 

@@ -1,6 +1,7 @@
 import cairo
 
 class BaseRenderer(object):
+
     def __init__(self, params):
         self.params = params
 
@@ -16,4 +17,3 @@ class BaseRenderer(object):
         surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         self.render_to_surface(surf, w, h)
         surf.write_to_png(filename)
-
