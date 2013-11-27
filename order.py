@@ -1,5 +1,5 @@
-from backends.shirtsio import ShirtsIOBatch
-from model import AlgoshirtModel
+from algoshirt.backends.shirtsio import ShirtsIOBatch
+from algoshirt.model import AlgoshirtModel
 import sys, argparse
 
 parser = argparse.ArgumentParser()

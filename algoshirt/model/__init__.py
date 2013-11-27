@@ -25,6 +25,12 @@ class Subscriber(Base):
     active   = Column(Boolean)
 
     def __init__(self, name=None, info=None):
+        self.update(info)
+
+        if name != None:
+            self.name = name
+
+    def update(self, info=None):
         if (info != None):
             if "id" in info: self.id = info["id"]
 
@@ -42,9 +48,6 @@ class Subscriber(Base):
 
             if "active" in info: self.active = info["active"]
 
-        if name != None:
-            self.name = name
-
     def __repr__(self):
         return "<User({}, '{}')>".format(self.id, self.name)
 
@@ -57,7 +60,7 @@ class Subscriber(Base):
 
             "size":     self.size,
 
-            "address":  self.address,
+            "address": self.address,
             "address2": self.address2,
             "city":     self.city,
             "state":    self.state,
@@ -82,6 +85,11 @@ class AlgoshirtModel(object):
         session = self.Session()
         sub = session.query(Subscriber).filter(Subscriber.id == id).first()
         session.delete(sub)
+        session.commit()
+
+    def mergeSubscriber(self, subscriber):
+        session = self.Session()
+        session.merge(subscriber)
         session.commit()
 
     def subscribers(self):

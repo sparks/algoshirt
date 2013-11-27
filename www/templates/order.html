@@ -1,3 +1,13 @@
 <div ng-controller="OrderCtrl">
-	Order
+	<form name="orderForm" class="form">
+		<h3>Subscribe</h3>
+		<fieldset>
+			<p><button class="btn btn-primary" ng-click="prepare()">Prepare!</button></p>
+			<p>{{prepareResp}}</p>
+			<p><button class="btn btn-primary" ng-click="quote()">Quote!</button></p>
+			<p>{{quoteResp}}</p>
+			<p><button class="btn btn-success" ng-click="place()" ng-disabled="noQuote">Order!</button></p>
+			<p>{{placeResp}}</p>
+		</fieldset>
+	</form>
 </div>

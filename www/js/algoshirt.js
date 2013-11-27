@@ -1,24 +1,29 @@
 angular.module('algoshirt', [
-	'ngResource'
+	'ngResource',
 ])
 
 .config(function($routeProvider, $locationProvider) {
 	$routeProvider.when('/', {
-		templateUrl: '/templates/subscribe.html',
-		controller: SubscribeCtrl
+		templateUrl: '/templates/subscriber-form.html',
+		controller: SubscriberFormCtrl
 	});
 
-	$routeProvider.when('/subscribe', {
-		templateUrl: '/templates/subscribe.html',
-		controller: SubscribeCtrl
+	$routeProvider.when('/subscribers/new', {
+		templateUrl: '/templates/subscriber-form.html',
+		controller: SubscriberFormCtrl
 	});
 
-	$routeProvider.when('/subscribers', {
-		templateUrl: '/templates/subscriber.html',
+	$routeProvider.when('/subscribers/:id/edit', {
+		templateUrl: '/templates/subscriber-form.html',
 		controller: SubscriberCtrl
 	});
 
 	$routeProvider.when('/subscribers/:id', {
+		templateUrl: '/templates/subscriber.html',
+		controller: SubscriberCtrl
+	});
+
+	$routeProvider.when('/subscribers', {
 		templateUrl: '/templates/subscriber.html',
 		controller: SubscriberCtrl
 	});
@@ -34,7 +39,7 @@ angular.module('algoshirt', [
 
 .factory('SubscriberResource', function ($resource) {
 	var SubscriberResource = $resource(
-		'api/subscribers/:id',
+		'/api/subscribers/:id',
 		{ id: '@id' },
 		{}
 	);
@@ -42,9 +47,21 @@ angular.module('algoshirt', [
 	return SubscriberResource;
 });
 
-function SubscribeCtrl($scope, $location, SubscriberResource) {
+function SubscriberFormCtrl($scope, $location, $routeParams, SubscriberResource) {
 
-	$scope.subscriber = {}
+	if ('id' in $routeParams) {
+		$scope.subscriber = SubscriberResource.get(
+			{'id' : $routeParams.id},
+			function(result) {},
+			function(e) {
+				console.log(e);
+			}
+		);
+		$scope.action = "Save";
+	} else {
+		$scope.subscriber = {}
+		$scope.action = "Subscribe";
+	}
 
 	$scope.subscribe = function() {
 		SubscriberResource.save($scope.subscriber,
@@ -63,7 +80,6 @@ function SubscriberCtrl($scope, $location, $routeParams, SubscriberResource) {
 
 	$scope.refresh = function() {
 		if ('id' in $routeParams) {
-			console.log("yup");
 			$scope.subscribers = [SubscriberResource.get(
 				{'id' : $routeParams.id},
 				function(result) {},
@@ -93,10 +109,48 @@ function SubscriberCtrl($scope, $location, $routeParams, SubscriberResource) {
 		);
 	};
 
+	$scope.edit = function(sub) {
+		$location.path('/subscribers/'+sub.id+'/edit');
+	}
+
 	$scope.refresh();
 }
 
-function OrderCtrl($scope, $location) {
+function OrderCtrl($scope, $location, $http) {
+
+	$scope.noQuote = true;
+
+	$scope.prepare = function() {
+		$http.post('/api/order', {"action": "prepare"}).
+		success(function(data) {
+			$scope.prepareResp = data;
+		}).
+		error(function(e) {
+			console.log(e);
+		});
+	};
+
+	$scope.quote = function() {
+		$http.post('/api/order', {"action": "quote"}).
+		success(function(data) {
+			$scope.quoteResp = data;
+			$scope.noQuote = false;
+		}).
+		error(function(e) {
+			$scope.noQuote = true;
+			console.log(e);
+		});
+	};
+
+	$scope.place = function() {
+		$http.post('/api/order', {"action": "place", "args": $scope.quoteResp}).
+		success(function(data) {
+			$scope.placeResp = data;
+		}).
+		error(function(e) {
+			$scope.response = e;
+		});
+	};
 
 }
 

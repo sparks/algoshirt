@@ -4,13 +4,14 @@
 		<h4>Details</h4>
 		<p>Shirt size: {{subscriber.size}}</p>
 		<h4>Address</h4>
-		<pre>{{subscriber.address}}
-{{subscriber.address2}}
+		<pre>{{subscriber.address}}<span ng-show="subscriber.address2">
+{{subscriber.address2}}</span>
 {{subscriber.city}}
 {{subscriber.state}}
 {{subscriber.postcode}}
 {{subscriber.country}}</pre>
 		<div>
+			<button class="btn btn-primary" ng-click="edit(subscriber)">Edit</button>
 			<button class="btn btn-danger" ng-click="delete(subscriber)">Delete</button>
 		</div>
 	</div>

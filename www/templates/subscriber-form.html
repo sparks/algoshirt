@@ -1,4 +1,4 @@
-<div ng-controller="SubscribeCtrl">
+<div ng-controller="SubscriberFormCtrl">
 	<form name="subscribeForm" class="form">
 		<h3>Subscribe</h3>
 		<fieldset class="row-fluid">
@@ -51,7 +51,7 @@
 		</fieldset>
 		<fieldset class="row-fluid">
 			<div class="span12 confirm">
-				<button class="btn btn-primary" ng-click="subscribe()" ng-disabled="subscribeForm.$invalid">Subscribe</button>
+				<button class="btn btn-primary" ng-click="subscribe()" ng-disabled="subscribeForm.$invalid">{{action}}</button>
 			</div>
 		</fieldset>
 	</form>

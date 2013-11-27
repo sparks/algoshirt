@@ -39,20 +39,26 @@ def shirtsio_encode(dictionary, prefix=None):
     return result
 
 class ShirtsIOBatch(object):
-    def __init__(self, imagefile, subscribers, apikey):
-        self.imagefile = imagefile
-        self.subscribers = subscribers
+    def __init__(self, apikey, subscribers, front_file, proof_file, dimensions, placement, color, color_count, product_id):
         self.apikey = apikey
+        self.subscribers = subscribers
+        self.front_file = front_file
+        self.proof_file = proof_file
+        self.dimensions = dimensions
+        self.placement = placement
+        self.color = color
+        self.color_count = color_count
+        self.product_id = product_id
 
-    def quote(self):
+    def build_request(self):
         fields = {}
         fields["api_key"] = self.apikey
         fields["garment"] = []
         fields["addresses"] = []
         for i, subscriber in enumerate(self.subscribers):
             garment = {}
-            garment["product_id"] = 3
-            garment["color"] = "Red"
+            garment["product_id"] = self.product_id
+            garment["color"] = self.color
             garment["sizes"] = {subscriber.size:1}
             fields["garment"].append(garment)
 
@@ -64,50 +70,34 @@ class ShirtsIOBatch(object):
             address["city"] = subscriber.city
             address["state"] = subscriber.state
             address["country"] = subscriber.country
-            address["zip"] = subscriber.postcode
+            address["zipcode"] = subscriber.postcode
             fields["addresses"].append(address)
 
-        fields["print"] = {"front": {"color_count": 1}}
-        fields["address_count"] = len(self.subscribers)
+        fields["print"] = {
+            "front": {
+                "color_count": self.color_count,
+                "dimensions": self.dimensions,
+                "placement": self.placement
+            }
+        }
 
+        fields["address_count"] = len(self.subscribers)
+        fields["international_garments"] = {"CA": len(self.subscribers)}
+
+        return fields
+
+    def quote(self):
+        fields = self.build_request()
         r = requests.get(API_V1 + "/quote", params=shirtsio_encode(fields))
-        #print(r.url)
-        #print(r.text)
         return json.loads(r.text).get("result")
 
     def order(self, quote, test=True):
-        fields = {}
-        fields["api_key"] = self.apikey
-        fields["garment"] = []
-        fields["addresses"] = []
-        for i, subscriber in enumerate(self.subscribers):
-            garment = {}
-            garment["product_id"] = 3
-            garment["color"] = "Red"
-            garment["sizes"] = {subscriber.size:1}
-            fields["garment"].append(garment)
-
-            address = {}
-            address["name"] = subscriber.name
-            address["company"] = subscriber.company
-            address["address"] = subscriber.address
-            address["address2"] = subscriber.address2
-            address["city"] = subscriber.city
-            address["state"] = subscriber.state
-            address["country"] = subscriber.country
-            address["zip"] = subscriber.postcode
-            fields["addresses"].append(address)
-
-        fields["print"] = {"front": {"color_count": 1}}
-        fields["address_count"] = len(self.subscribers)
+        fields = self.build_request()
         fields["test"] = test
         fields["price"] = quote["total"]
 
         r = requests.post(API_V1 + "/order/",
-                files={"print[front][artwork]": open(self.imagefile, 'rb'), "print[front][proof]": open(self.imagefile, 'rb')},
-                data=shirtsio_encode(fields))
+                files = {"print[front][artwork]": open(self.front_file, 'rb'), "print[front][proof]": open(self.proof_file, 'rb')},
+                data = shirtsio_encode(fields))
 
-        print r.status_code
-        print r.url
-        print r.text
-        return json.loads(r.text).get("result")
+        return json.loads(r.text)
