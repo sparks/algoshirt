@@ -35,7 +35,7 @@ class Order(object):
                 return "prepare!"
             elif req["action"] == "quote":
                 self.batch = ShirtsIOBatch(
-                    "apikeyhere", 
+                    g.apikey, 
                     g.model.subscribers(), 
                     "./renders/test.png", 
                     "./renders/test.jpg", 
@@ -73,7 +73,7 @@ class Subscribers(object):
         self.CORS()
         if id == None:
             info = json.load(cherrypy.request.body)
-            subscriber = Subscriber(info=info)
+            subscriber = Subscriber(info)
             g.model.addSubscriber(subscriber)
             return subscriber.to_dict()
         else:
@@ -97,8 +97,10 @@ class Subscribers(object):
         cherrypy.response.headers["Access-Control-Allow-Origin"] = "*"
         cherrypy.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, X-PINGOTHER"
 
-def serve(config):
+def serve(config, apikey):
     root = Root()
+
+    g.apikey = apikey
 
     g.application = cherrypy.tree.mount(
         Root(), "/", 

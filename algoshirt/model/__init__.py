@@ -1,9 +1,35 @@
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, String, Boolean, Integer, create_engine
+from sqlalchemy import Column, String, Boolean, Integer, Float, DateTime, create_engine
 
 Base = declarative_base()
+
+class Render(Base):
+    __tablename__ = 'renders'
+
+    id = Column(Integer, primary_key=True)
+
+    name       = Column(String)
+    optimizers = Column(String)
+    algorithms = Column(String)
+
+    status = Column(String)
+
+class Order(Base):
+    __tablename__ = 'orders'
+
+    id = Column(Integer, primary_key=True)
+
+    date      = Column(DateTime)
+    render_id = Column(Integer)
+
+    backend   = Column(String)
+    cost      = Column(Float)
+
+    data = Column(String)
+
+    status = Column(String)
 
 class Subscriber(Base):
     __tablename__ = 'subscribers'
@@ -24,11 +50,8 @@ class Subscriber(Base):
 
     active   = Column(Boolean)
 
-    def __init__(self, name=None, info=None):
+    def __init__(self, info=None):
         self.update(info)
-
-        if name != None:
-            self.name = name
 
     def update(self, info=None):
         if (info != None):
