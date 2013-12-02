@@ -5,5 +5,7 @@
 
 *.db
 
+*.png
+
 backends-data
 renders
