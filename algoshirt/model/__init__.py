@@ -2,6 +2,8 @@ import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, String, Boolean, Integer, Float, DateTime, create_engine
+import datetime
+import dateutil.parser
 
 Base = declarative_base()
 
@@ -15,12 +17,28 @@ class Render(Base):
 
     status      = Column(String)
 
+    def __init__(self, info=None):
+        self.update(info)
+
+    def update(self, info=None):
+        if (info != None):
+            if "id" in info: self.id = info["id"]
+
+            if "description" in info: self.description = info["description"]
+            if "date" in info: 
+                if isinstance(info["date"], datetime.datetime):
+                    self.date = info["date"]
+                else:
+                    self.date = dateutil.parser.parse(info["date"])
+
+            if "status" in info: self.status = info["status"]
+
     def to_dict(self):
         return {
             "id":          self.id,
 
             "description": self.description,
-            "date":        self.date,
+            "date":        self.date.isoformat(),
 
             "status":      self.status,
         }
@@ -37,11 +55,29 @@ class Order(Base):
 
     status    = Column(String)
 
+    def __init__(self, info=None):
+        self.update(info)
+
+    def update(self, info=None):
+        if (info != None):
+            if "id" in info: self.id = info["id"]
+
+            if "date" in info: 
+                if isinstance(info["date"], datetime.datetime):
+                    self.date = info["date"]
+                else:
+                    self.date = dateutil.parser.parse(info["date"])
+            if "cost" in info: self.cost = info["cost"]
+            if "render_id" in info: self.render_id = info["render_id"]
+            if "data" in info: self.data = info["data"]
+
+            if "status" in info: self.status = info["status"]
+
     def to_dict(self):
         return {
             "id":        self.id,
 
-            "date":      self.date,
+            "date":      self.date.isoformat(),
             "cost":      self.cost,
             "render_id": self.render_id,
             "data":      self.data,

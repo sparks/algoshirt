@@ -3,6 +3,7 @@ from ..model import AlgoshirtModel, Subscriber, Render, Order
 from mako.template import Template
 import json
 import os
+import datetime
 from algoshirt.backends.shirtsio import ShirtsIOBatch
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +42,23 @@ class Renders(object):
     @cherrypy.tools.json_out()
     def POST(self):
         CORS()
+        session = g.model.get_session()
+
+        render = Render({"description": "basic render", "date": datetime.datetime.now(), "status": 0})
+        session.add(render)
+        session.commit() # commit now so we get an id
+        s_dict = render.to_dict()
+        session.close()
+        return s_dict
+
+    @cherrypy.expose
+    def DELETE(self, id=None):
+        CORS()
+        session = g.model.get_session()
+        render = session.query(Render).filter(Render.id == int(id)).first()
+        session.delete(render)
+        session.commit()
+        session.close()  
 
     @cherrypy.expose
     def OPTIONS(self, id=None):
@@ -93,6 +111,15 @@ class Orders(object):
         #     elif req["action"] == "place":
         #         if "args" in req and self.batch != None:
         #             return self.batch.order(req["args"])
+
+    @cherrypy.expose
+    def DELETE(self, id=None):
+        CORS()
+        session = g.model.get_session()
+        order = session.query(Order).filter(Order.id == int(id)).first()
+        session.delete(order)
+        session.commit()
+        session.close()
 
     @cherrypy.expose
     def OPTIONS(self, id=None):
