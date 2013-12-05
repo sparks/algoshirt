@@ -1,4 +1,5 @@
-import cairo, tempfile, random, feedparser, urllib, Image, os
+import cairo, tempfile, random, feedparser, urllib, os
+from PIL import Image
 from BeautifulSoup import BeautifulSoup
 
 __all__ = [ 'rss_to_image_surface']

@@ -8,28 +8,46 @@ Base = declarative_base()
 class Render(Base):
     __tablename__ = 'renders'
 
-    id = Column(Integer, primary_key=True)
+    id          = Column(Integer, primary_key=True)
 
-    name       = Column(String)
-    optimizers = Column(String)
-    algorithms = Column(String)
+    description = Column(String)
+    date        = Column(DateTime)
 
-    status = Column(String)
+    status      = Column(String)
+
+    def to_dict(self):
+        return {
+            "id":          self.id,
+
+            "description": self.description,
+            "date":        self.date,
+
+            "status":      self.status,
+        }
 
 class Order(Base):
     __tablename__ = 'orders'
 
-    id = Column(Integer, primary_key=True)
+    id        = Column(Integer, primary_key=True)
 
     date      = Column(DateTime)
-    render_id = Column(Integer)
-
-    backend   = Column(String)
     cost      = Column(Float)
+    render_id = Column(Integer)
+    data      = Column(String)
 
-    data = Column(String)
+    status    = Column(String)
 
-    status = Column(String)
+    def to_dict(self):
+        return {
+            "id":        self.id,
+
+            "date":      self.date,
+            "cost":      self.cost,
+            "render_id": self.render_id,
+            "data":      self.data,
+            
+            "status":    self.status,
+        }
 
 class Subscriber(Base):
     __tablename__ = 'subscribers'
@@ -94,29 +112,11 @@ class Subscriber(Base):
         }
 
 class AlgoshirtModel(object):
+
     def __init__(self, dburl):
         self.engine = create_engine(dburl)
-        self.Session = sessionmaker(bind=self.engine)
+        self.Session = sessionmaker(bind = self.engine)
         Base.metadata.create_all(self.engine)
 
-    def addSubscriber(self, subscriber):
-        session = self.Session()
-        session.add(subscriber)
-        session.commit()
-
-    def removeSubscriber(self, id):
-        session = self.Session()
-        sub = session.query(Subscriber).filter(Subscriber.id == id).first()
-        session.delete(sub)
-        session.commit()
-
-    def mergeSubscriber(self, subscriber):
-        session = self.Session()
-        session.merge(subscriber)
-        session.commit()
-
-    def subscribers(self):
-        return self.Session().query(Subscriber).all()
-
-    def subscriber(self, id):
-        return self.Session().query(Subscriber).filter(Subscriber.id == id).first()
+    def get_session(self):
+        return self.Session()
