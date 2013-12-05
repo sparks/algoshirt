@@ -14,6 +14,8 @@ class Render(Base):
 
     description = Column(String)
     date        = Column(DateTime)
+    renderPath  = Column(String)
+    logDir      = Column(String)
 
     status      = Column(String)
 
@@ -31,6 +33,9 @@ class Render(Base):
                 else:
                     self.date = dateutil.parser.parse(info["date"])
 
+            if "renderPath" in info: self.renderPath = info["renderPath"]
+            if "logDir" in info: self.logDir = info["logDir"]
+
             if "status" in info: self.status = info["status"]
 
     def to_dict(self):
@@ -39,6 +44,8 @@ class Render(Base):
 
             "description": self.description,
             "date":        self.date.isoformat(),
+            "renderPath":  self.renderPath,
+            "logDir":      self.logDir,
 
             "status":      self.status,
         }
