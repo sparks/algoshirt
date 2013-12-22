@@ -14,8 +14,8 @@ class Render(Base):
 
     description = Column(String)
     date        = Column(DateTime)
-    renderPath  = Column(String)
-    logDir      = Column(String)
+    working_dir  = Column(String)
+    log_dir      = Column(String)
 
     status      = Column(String)
 
@@ -33,8 +33,8 @@ class Render(Base):
                 else:
                     self.date = dateutil.parser.parse(info["date"])
 
-            if "renderPath" in info: self.renderPath = info["renderPath"]
-            if "logDir" in info: self.logDir = info["logDir"]
+            if "working_dir" in info: self.working_dir = info["working_dir"]
+            if "log_dir" in info: self.log_dir = info["log_dir"]
 
             if "status" in info: self.status = info["status"]
 
@@ -44,8 +44,8 @@ class Render(Base):
 
             "description": self.description,
             "date":        self.date.isoformat(),
-            "renderPath":  self.renderPath,
-            "logDir":      self.logDir,
+            "working_dir":  self.working_dir,
+            "log_dir":      self.log_dir,
 
             "status":      self.status,
         }
