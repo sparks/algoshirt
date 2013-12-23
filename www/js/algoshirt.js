@@ -143,7 +143,7 @@ function SubscriberCtrl($scope, $location, $routeParams, SubscriberResource) {
 	$scope.refresh();
 }
 
-function OrderCtrl($scope, $location, $http, RenderResource, OrderResource) {
+function OrderCtrl($scope, $location, $http, RenderResource, OrderResource, $timeout) {
 
 	$scope.refresh = function() {
 		$scope.renders = RenderResource.query(
@@ -174,7 +174,7 @@ function OrderCtrl($scope, $location, $http, RenderResource, OrderResource) {
 
 	$scope.buildOrder = function(render) {
 		if (render.status != "done") {
-			console.log("Render not complete yet, cannot order");
+			$scope.addAlert("Render not complete yet, cannot create order.", 2000);
 		} else {
 			OrderResource.save({"render_id": render.id},
 				function(result) {
@@ -189,7 +189,7 @@ function OrderCtrl($scope, $location, $http, RenderResource, OrderResource) {
 
 	$scope.quoteOrder = function(order) {
 		if (order.status != "noquote") {
-			console.log("Already have quote");
+			$scope.addAlert("Quote already generated, build a new order to get a new quote.", 2000);
 		} else {
 			OrderResource.quote({'id': order.id},
 				function(result) {
@@ -203,8 +203,10 @@ function OrderCtrl($scope, $location, $http, RenderResource, OrderResource) {
 	};
 
 	$scope.placeOrder = function(order) {
-		if (order.status != "quote") {
-			console.log("Need quote to order");
+		if (order.status == "noquote") {
+			$scope.addAlert("Cannot place order without quote.", 2000);
+		} else if (order.status != "quote") {
+			$scope.addAlert("Order already placed. Please start a new order.", 2000);
 		} else {
 			OrderResource.place({'id': order.id},
 				function(result) {
@@ -241,8 +243,15 @@ function OrderCtrl($scope, $location, $http, RenderResource, OrderResource) {
 
 	$scope.alerts = [];
 
-	$scope.addAlert = function() {
-		$scope.alerts.push({msg: "Another alert!"});
+	$scope.addAlert = function(msg, timeout) {
+		var alert = {msg: msg};    
+		$scope.alerts.push(alert);
+
+		if (timeout) {
+			$timeout(function(){
+				$scope.closeAlert($scope.alerts.indexOf(alert));
+			}, timeout);
+		}
 	};
 
 	$scope.closeAlert = function(index) {
