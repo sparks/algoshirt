@@ -10,12 +10,13 @@ Base = declarative_base()
 class Render(Base):
     __tablename__ = 'renders'
 
-    id          = Column(Integer, primary_key=True)
+    id                = Column(Integer, primary_key=True)
 
-    description = Column(String)
-    date        = Column(DateTime)
-    working_dir  = Column(String)
-    log_dir      = Column(String)
+    description       = Column(String)
+    date              = Column(DateTime)
+    working_dir       = Column(String)
+    render_path_front = Column(String)
+    render_path_back  = Column(String)
 
     status      = Column(String)
 
@@ -34,33 +35,38 @@ class Render(Base):
                     self.date = dateutil.parser.parse(info["date"])
 
             if "working_dir" in info: self.working_dir = info["working_dir"]
-            if "log_dir" in info: self.log_dir = info["log_dir"]
+            if "render_path_front" in info: self.render_path_front = info["render_path_front"]
+            if "render_path_back" in info: self.render_path_back = info["render_path_back"]
 
             if "status" in info: self.status = info["status"]
 
     def to_dict(self):
         return {
-            "id":          self.id,
+            "id":                self.id,
 
-            "description": self.description,
-            "date":        self.date.isoformat(),
-            "working_dir":  self.working_dir,
-            "log_dir":      self.log_dir,
+            "description":       self.description,
+            "date":              self.date.isoformat(),
+            "working_dir":       self.working_dir,
+            "render_path_front": self.render_path_front,
+            "render_path_back":  self.render_path_back,
 
-            "status":      self.status,
+            "status":            self.status,
         }
 
 class Order(Base):
     __tablename__ = 'orders'
 
-    id        = Column(Integer, primary_key=True)
+    id               = Column(Integer, primary_key=True)
 
-    date      = Column(DateTime)
-    cost      = Column(Float)
-    render_id = Column(Integer)
-    data      = Column(String)
+    date             = Column(DateTime)
+    cost             = Column(Float)
+    render_id        = Column(Integer)
+    data             = Column(String)
 
-    status    = Column(String)
+    proof_path_front = Column(String)
+    proof_path_back  = Column(String)
+
+    status           = Column(String)
 
     def __init__(self, info=None):
         self.update(info)
@@ -78,18 +84,24 @@ class Order(Base):
             if "render_id" in info: self.render_id = info["render_id"]
             if "data" in info: self.data = info["data"]
 
+            if "proof_path_front" in info: self.proof_path_front = info["proof_path_front"]
+            if "proof_path_back" in info: self.proof_path_back = info["proof_path_back"]
+
             if "status" in info: self.status = info["status"]
 
     def to_dict(self):
         return {
-            "id":        self.id,
+            "id":               self.id,
 
-            "date":      self.date.isoformat(),
-            "cost":      self.cost,
-            "render_id": self.render_id,
-            "data":      self.data,
+            "date":             self.date.isoformat(),
+            "cost":             self.cost,
+            "render_id":        self.render_id,
+            "data":             self.data,
+
+            "proof_path_front": self.proof_path_front,
+            "proof_path_back":  self.proof_path_back,
             
-            "status":    self.status,
+            "status":           self.status,
         }
 
 class Subscriber(Base):

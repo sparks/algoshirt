@@ -1,13 +1,57 @@
 <div ng-controller="OrderCtrl">
-	<form name="orderForm" class="form">
-		<h3>Subscribe</h3>
-		<fieldset>
-			<p><button class="btn btn-primary" ng-click="prepare()">Prepare!</button></p>
-			<p>{{prepareResp}}</p>
-			<p><button class="btn btn-primary" ng-click="quote()">Quote!</button></p>
-			<p>{{quoteResp}}</p>
-			<p><button class="btn btn-success" ng-click="place()" ng-disabled="noQuote">Order!</button></p>
-			<p>{{placeResp}}</p>
-		</fieldset>
-	</form>
+		<h3>Renders</h3>
+		<p><button class="btn btn-success" ng-click="render()">New Render</button> <button class="btn btn-primary" ng-click="refresh()">Refresh</button></p>
+		<table>
+			<tr>
+				<th>Status</th>
+				<th>ID</th>
+				<th>Description</th>
+				<th>Date</th>
+				<th>Render Path</th>
+				<th></th>
+</tr>
+			<tr ng-repeat="render in renders">
+				<td>{{render.status}}</td>
+				<td>{{render.id}}</td>
+				<td>{{render.description}}</td>
+				<td><span am-time-ago="render.date"></span></td>
+				<td><a target="_blank" href="/renders/{{render.render_path_front}}">{{render.render_path_front}}</a></td>
+				<td>
+					<p><button class="btn btn-success" ng-click="buildOrder(render)">Order</button></p>
+					<p><button class="btn btn-danger" ng-click="deleteRender(render)">Delete</button></p>
+				</td>
+			</tr>
+		</table>
+
+		<div ng-show="orders.length">
+			<h3>Orders</h3>
+			<table>
+				<tr>
+					<th>Status</th>
+					<th>Render ID</th>
+					<th>Date</th>
+					<th>Cost</th>
+					<th>Proof</th>
+					<th>Data</th>
+					<th></th>
+				</tr>
+				<tr ng-repeat="order in orders">
+					<td>{{order.status}}</td>
+					<td>{{order.render_id}}</td>
+					<td><span am-time-ago="order.date"></span></td>
+					<td>{{order.cost}}$</td>
+					<td><a target="_blank" href="/renders/{{order.proof_path_front}}">{{order.proof_path_front}}</a></td>
+					<td>{{order.data}}</td>
+					<td>
+						<p><button class="btn btn-success" ng-click="quoteOrder(order)">Quote</button></p>
+						<p><button class="btn btn-warning" ng-click="placeOrder(order)">Place</button></p>
+						<p><button class="btn btn-danger" ng-click="deleteOrder(order)">Delete</button></p>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="alerts">
+			<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+		</div>
 </div>

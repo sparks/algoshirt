@@ -54,3 +54,22 @@ body {
 .subscriber {
 	margin: 40px auto 40px auto;
 }
+
+table, table tr td, table tr th {
+	border: 1px solid black;
+}
+
+table tr td, table tr th{
+	padding: 10px;
+}
+
+table {
+	margin: 20px 0 20px 0;
+}
+
+#alerts {
+	position: fixed;
+	top: 25px;
+	right: 25px;
+	width: 400px;
+}
