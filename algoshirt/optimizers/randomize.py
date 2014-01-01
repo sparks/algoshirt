@@ -4,7 +4,7 @@ def randomize(renderer):
 	rand_params = copy.deepcopy(renderer.default_params)
 
 	for key in rand_params:
-		if rand_params[key]["automate"] != "true":
+		if rand_params[key]["automate"] != True:
 			continue
 
 		type = rand_params[key]["type"]

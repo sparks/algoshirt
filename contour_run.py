@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from algoshirt.algorithms import TopoRenderer
+from algoshirt.algorithms.renders import TopoRenderer
 import cairo
 
 t = TopoRenderer({})

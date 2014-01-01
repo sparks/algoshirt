@@ -4,7 +4,7 @@ import cherrypy
 from mako.template import Template
 
 import algoshirt.optimizers as optimizers
-import algoshirt.algorithms as algorithms
+import algoshirt.algorithms.renderers as renderers
 
 from algoshirt.model import *
 from algoshirt.backends import *
@@ -30,11 +30,12 @@ class RenderThread(threading.Thread):
 
         render.render_path_front = os.path.join(render.working_dir, "render.png")
 
-        random_render_instance = optimizers.randomize(algorithms.FractalDots)
+        random_render_instance = optimizers.randomize(renderers.BigPixels)
+        # random_render_instance = optimizers.randomize(renderers.FractalDots)
         random_render_instance.render_to_png(
             os.path.join(g.renders_dir, render.render_path_front),
-            2000,
-            2000
+            700,
+            700
         )
 
         params_path = os.path.join(qualified_working_dir, "params.json")
@@ -69,7 +70,7 @@ class Renders(object):
 
         if id == None:
             out = []
-            renders = session.query(Render).order_by(Render.date)
+            renders = session.query(Render).order_by(Render.date.desc())
             for render in renders:
                 out.append(render.to_dict())
             session.close()
