@@ -237,7 +237,8 @@ class Tiles(object):
 			currentCol = []
 			for l in range(rows):
 				currentCol.append([k,l])
-	
+			grid.append(currentCol)
+
 		shuffler = Shuffler(random.random(), random.random())	
 		shuffleGrid(grid, shuffler)
 
