@@ -14,7 +14,7 @@ def randomize(renderer):
 			max_val = float(rand_params[key]["max"])
 
 			rand_params[key]["value"] = random.uniform(min_val, max_val)
-		elif type != "int":
+		elif type == "int":
 			min_val = int(rand_params[key]["min"])
 			max_val = int(rand_params[key]["max"])
 
