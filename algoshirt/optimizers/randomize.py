@@ -9,15 +9,17 @@ def randomize(renderer):
 
 		type = rand_params[key]["type"]
 		
-		if type != "float" and type != "int":
+		if type == "float":
+			min_val = float(rand_params[key]["min"])
+			max_val = float(rand_params[key]["max"])
+
+			rand_params[key]["value"] = random.uniform(min_val, max_val)
+		elif type != "int":
+			min_val = int(rand_params[key]["min"])
+			max_val = int(rand_params[key]["max"])
+
+			rand_params[key]["value"] = random.randint(min_val, max_val)
+		else:
 			continue
-
-		min_val = rand_params[key]["min"]
-		max_val = rand_params[key]["max"]
-
-		rand_params[key]["value"] = (max_val-min_val)*random.random()+min_val
-
-		if type == "int":
-			rand_params[key]["value"] = int(rand_params[key]["value"])
 
 	return renderer(rand_params)
