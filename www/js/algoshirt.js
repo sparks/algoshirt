@@ -1,5 +1,7 @@
 angular.module('algoshirt', [
 	'ngResource',
+	'ui.bootstrap',
+	'angularMoment'
 ])
 
 .config(function($routeProvider, $locationProvider) {
@@ -45,6 +47,31 @@ angular.module('algoshirt', [
 	);
 
 	return SubscriberResource;
+})
+
+.factory('RenderResource', function ($resource) {
+	var RenderResource = $resource(
+		'/api/renders/:id',
+		{ id: '@id' },
+		{
+			'new': { method:'POST' }
+		}
+	);
+
+	return RenderResource;
+})
+
+.factory('OrderResource', function ($resource) {
+	var OrderResource = $resource(
+		'/api/orders/:id',
+		{ id: '@id' },
+		{
+			'quote': { method: 'POST', params: { action: 'quote' }},
+			'place': { method: 'POST', params: { action: 'place' }}
+		}
+	);
+
+	return OrderResource;
 });
 
 function SubscriberFormCtrl($scope, $location, $routeParams, SubscriberResource) {
@@ -116,41 +143,121 @@ function SubscriberCtrl($scope, $location, $routeParams, SubscriberResource) {
 	$scope.refresh();
 }
 
-function OrderCtrl($scope, $location, $http) {
+function OrderCtrl($scope, $location, $http, RenderResource, OrderResource, $timeout) {
 
-	$scope.noQuote = true;
+	$scope.refresh = function() {
+		$scope.renders = RenderResource.query(
+			function(o) {},
+			function(e) {
+				console.log(e);
+			}
+		);
 
-	$scope.prepare = function() {
-		$http.post('/api/order', {"action": "prepare"}).
-		success(function(data) {
-			$scope.prepareResp = data;
-		}).
-		error(function(e) {
-			console.log(e);
-		});
+		$scope.orders = OrderResource.query(
+			function(o) {},
+			function(e) {
+				console.log(e);
+			}
+		);
 	};
 
-	$scope.quote = function() {
-		$http.post('/api/order', {"action": "quote"}).
-		success(function(data) {
-			$scope.quoteResp = data;
-			$scope.noQuote = false;
-		}).
-		error(function(e) {
-			$scope.noQuote = true;
-			console.log(e);
-		});
+	$scope.render = function() {
+		RenderResource.new({},
+			function(res) {
+				$scope.refresh();
+			},
+			function(e) {
+				console.log(e);
+			}
+		);
 	};
 
-	$scope.place = function() {
-		$http.post('/api/order', {"action": "place", "args": $scope.quoteResp}).
-		success(function(data) {
-			$scope.placeResp = data;
-		}).
-		error(function(e) {
-			$scope.response = e;
-		});
+	$scope.buildOrder = function(render) {
+		if (render.status != "done") {
+			$scope.addAlert("Render not complete yet, cannot create order.", 2000);
+		} else {
+			OrderResource.save({"render_id": render.id},
+				function(result) {
+					$scope.refresh();
+				},
+				function(e) {
+					console.log(e);
+				}
+			);
+		}
 	};
 
+	$scope.quoteOrder = function(order) {
+		if (order.status != "noquote") {
+			$scope.addAlert("Quote already generated, build a new order to get a new quote.", 2000);
+		} else {
+			OrderResource.quote({'id': order.id},
+				function(result) {
+					$scope.refresh();
+				},
+				function(e) {
+					console.log(e);
+				}
+			);
+		}
+	};
+
+	$scope.placeOrder = function(order) {
+		if (order.status == "noquote") {
+			$scope.addAlert("Cannot place order without quote.", 2000);
+		} else if (order.status != "quote") {
+			$scope.addAlert("Order already placed. Please start a new order.", 2000);
+		} else {
+			OrderResource.place({'id': order.id},
+				function(result) {
+					$scope.refresh();
+				},
+				function(e) {
+					console.log(e);
+				}
+			);
+		}
+	};
+
+	$scope.deleteRender = function(render) {
+		RenderResource.delete({'id': render.id}, //Dunno why I can't just put render here? Something with Cherrypy and DELETE
+			function() {
+				$scope.refresh();
+			},
+			function(e) {
+				console.log(e);
+			}
+		);
+	};
+
+	$scope.deleteOrder = function(order) {
+		OrderResource.delete({'id': order.id}, //Dunno why I can't just put render here? Something with Cherrypy and DELETE
+			function() {
+				$scope.refresh();
+			},
+			function(e) {
+				console.log(e);
+			}
+		);
+	};
+
+	$scope.alerts = [];
+
+	$scope.addAlert = function(msg, timeout) {
+		var alert = {msg: msg};    
+		$scope.alerts.push(alert);
+
+		if (timeout) {
+			$timeout(function(){
+				$scope.closeAlert($scope.alerts.indexOf(alert));
+			}, timeout);
+		}
+	};
+
+	$scope.closeAlert = function(index) {
+		$scope.alerts.splice(index, 1);
+	};
+
+	$scope.refresh();
 }
 

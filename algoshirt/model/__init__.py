@@ -2,34 +2,107 @@ import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, String, Boolean, Integer, Float, DateTime, create_engine
+import datetime
+import dateutil.parser
 
 Base = declarative_base()
 
 class Render(Base):
     __tablename__ = 'renders'
 
-    id = Column(Integer, primary_key=True)
+    id                = Column(Integer, primary_key=True)
 
-    name       = Column(String)
-    optimizers = Column(String)
-    algorithms = Column(String)
+    description       = Column(String)
+    date              = Column(DateTime)
+    working_dir       = Column(String)
+    render_path_front = Column(String)
+    render_path_back  = Column(String)
 
-    status = Column(String)
+    status      = Column(String)
+
+    def __init__(self, info=None):
+        self.update(info)
+
+    def update(self, info=None):
+        if (info != None):
+            if "id" in info: self.id = info["id"]
+
+            if "description" in info: self.description = info["description"]
+            if "date" in info: 
+                if isinstance(info["date"], datetime.datetime):
+                    self.date = info["date"]
+                else:
+                    self.date = dateutil.parser.parse(info["date"])
+
+            if "working_dir" in info: self.working_dir = info["working_dir"]
+            if "render_path_front" in info: self.render_path_front = info["render_path_front"]
+            if "render_path_back" in info: self.render_path_back = info["render_path_back"]
+
+            if "status" in info: self.status = info["status"]
+
+    def to_dict(self):
+        return {
+            "id":                self.id,
+
+            "description":       self.description,
+            "date":              self.date.isoformat(),
+            "working_dir":       self.working_dir,
+            "render_path_front": self.render_path_front,
+            "render_path_back":  self.render_path_back,
+
+            "status":            self.status,
+        }
 
 class Order(Base):
     __tablename__ = 'orders'
 
-    id = Column(Integer, primary_key=True)
+    id               = Column(Integer, primary_key=True)
 
-    date      = Column(DateTime)
-    render_id = Column(Integer)
+    date             = Column(DateTime)
+    cost             = Column(Float)
+    render_id        = Column(Integer)
+    data             = Column(String)
 
-    backend   = Column(String)
-    cost      = Column(Float)
+    proof_path_front = Column(String)
+    proof_path_back  = Column(String)
 
-    data = Column(String)
+    status           = Column(String)
 
-    status = Column(String)
+    def __init__(self, info=None):
+        self.update(info)
+
+    def update(self, info=None):
+        if (info != None):
+            if "id" in info: self.id = info["id"]
+
+            if "date" in info: 
+                if isinstance(info["date"], datetime.datetime):
+                    self.date = info["date"]
+                else:
+                    self.date = dateutil.parser.parse(info["date"])
+            if "cost" in info: self.cost = info["cost"]
+            if "render_id" in info: self.render_id = info["render_id"]
+            if "data" in info: self.data = info["data"]
+
+            if "proof_path_front" in info: self.proof_path_front = info["proof_path_front"]
+            if "proof_path_back" in info: self.proof_path_back = info["proof_path_back"]
+
+            if "status" in info: self.status = info["status"]
+
+    def to_dict(self):
+        return {
+            "id":               self.id,
+
+            "date":             self.date.isoformat(),
+            "cost":             self.cost,
+            "render_id":        self.render_id,
+            "data":             self.data,
+
+            "proof_path_front": self.proof_path_front,
+            "proof_path_back":  self.proof_path_back,
+            
+            "status":           self.status,
+        }
 
 class Subscriber(Base):
     __tablename__ = 'subscribers'
@@ -94,29 +167,11 @@ class Subscriber(Base):
         }
 
 class AlgoshirtModel(object):
+
     def __init__(self, dburl):
         self.engine = create_engine(dburl)
-        self.Session = sessionmaker(bind=self.engine)
+        self.Session = sessionmaker(bind = self.engine)
         Base.metadata.create_all(self.engine)
 
-    def addSubscriber(self, subscriber):
-        session = self.Session()
-        session.add(subscriber)
-        session.commit()
-
-    def removeSubscriber(self, id):
-        session = self.Session()
-        sub = session.query(Subscriber).filter(Subscriber.id == id).first()
-        session.delete(sub)
-        session.commit()
-
-    def mergeSubscriber(self, subscriber):
-        session = self.Session()
-        session.merge(subscriber)
-        session.commit()
-
-    def subscribers(self):
-        return self.Session().query(Subscriber).all()
-
-    def subscriber(self, id):
-        return self.Session().query(Subscriber).filter(Subscriber.id == id).first()
+    def get_session(self):
+        return self.Session()

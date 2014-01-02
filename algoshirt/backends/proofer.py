@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import cairo, math, argparse, os, uuid
+import cairo, math, argparse, os, uuid, tempfile
+from PIL import Image
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-uuid", type=str, default=str(uuid.uuid4()), help="(optional) uuid for this run")
@@ -18,7 +19,7 @@ class ShirtProof():
 		self.w = float(w)
 		self.h = float(h)
 
-	def proof_from_surface(self, surface):
+	def surface_from_surface(self, surface):
 		output = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image.get_width(), self.image.get_height())
 
 		cr = cairo.Context(output)
@@ -44,14 +45,25 @@ class ShirtProof():
 
 		return output
 
-	def proof_from_png(self, png_filename):
+	def surface_from_png(self, png_filename):
 		img_design = cairo.ImageSurface.create_from_png(png_filename)
-		return self.proof_from_surface(img_design)
+		return self.surface_from_surface(img_design)
+
+	def png_from_png(self, png_in_filename, png_out_filename):
+		img_design = cairo.ImageSurface.create_from_png(png_in_filename)
+		proof_surface = self.surface_from_surface(img_design)
+		proof_surface.write_to_png(png_out_filename)
+		return 
+
+	def jpg_from_png(self, png_in_filename, jpg_out_filename):
+		temp_png = tempfile.NamedTemporaryFile()
+		self.png_from_png(png_in_filename, temp_png.name)
+		im = Image.open(temp_png)
+		im.save(jpg_out_filename, "JPEG")
+		temp_png.close()
 
 if __name__ == "__main__":
 	args = parser.parse_args()
 
 	blank = ShirtProof(args.proof, 182, 150, 215, 300)
-	proof = blank.proof_from_png(args.design)
-
-	proof.write_to_png(os.path.join(args.renders_dir, "proof-"+args.uuid+".png"))
+	proof = blank.jpg_from_png(args.design, os.path.join(args.renders_dir, "proof-"+args.uuid+".jpg"))

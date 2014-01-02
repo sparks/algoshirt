@@ -1,5 +1,5 @@
 from algoshirt.backends.shirtsio import ShirtsIOBatch
-from algoshirt.model import AlgoshirtModel
+from algoshirt.model import AlgoshirtModel, Subscriber
 import sys, argparse
 
 parser = argparse.ArgumentParser()
@@ -11,11 +11,26 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	model = AlgoshirtModel("sqlite:///"+args.db)
-	batch = ShirtsIOBatch(args.imgfile, model.subscribers(), args.apikey)
+
+	session = model.get_session()
+
+	batch = ShirtsIOBatch(
+		args.apikey,
+		session.query(Subscriber).all(), 
+		"./renders/test.png", 
+		"./renders/test.jpg", 
+		"As large as possible", 
+		"Centered",
+		"black", 
+		11, 
+		1
+	)
 
 	quote = batch.quote()
-
+	print(quote)
 	print("Shirts.IO quote: "+str(quote["total"]))
 	test = raw_input("Confirm order ...")
 
-	batch.order(quote)
+	print(batch.order(quote))
+
+	session.close()
