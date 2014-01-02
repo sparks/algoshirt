@@ -82,10 +82,10 @@ class FractalDots(BaseRenderer):
 	def __init__(self, params = default_params):
 		super(FractalDots, self).__init__(params)
 
-	def render_to_surface(self, surface, w, h):
-		cr = cairo.Context(surface)
+	def render_to_surface(self, surface):
+		cr = cairo.Context(surface.surface)
 
-		cr.translate(w/2, h/2)
+		cr.translate(surface.width/2, surface.height/2)
 		self.circle(
 			cr,
 			cr.get_matrix(),

@@ -18,8 +18,8 @@ class BigPixels(BaseRenderer):
 	def __init__(self,params = default_params):
 		super(BigPixels, self).__init__(params)
 		
-	def render_to_surface(self, surface, w, h):
-		cr = cairo.Context(surface)
+	def render_to_surface(self, surface):
+		cr = cairo.Context(surface.surface)
 		self.pixellize(cr, webscrapper.rss_to_image_surface()[0],self.params["pixel_size"]["value"])
 		
 	def pixellize(self, cr, image, pixel_size):

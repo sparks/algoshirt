@@ -58,8 +58,8 @@ class TopoRenderer(BaseRenderer):
         self.ysamples = self.params.get("ysamples", 200)
         self.alpha = self.params.get("alpha", 0.5)
 
-    def render_to_surface(self, surface, w, h):
-        cx = cairo.Context(surface)
+    def render_to_surface(self, surface):
+        cx = cairo.Context(surface.surface)
         grid = np.zeros((self.xsamples, self.ysamples))
         for x in range(self.xsamples):
             for y in range(self.ysamples):
@@ -79,8 +79,8 @@ class TopoRenderer(BaseRenderer):
         # Scale everything appropriately
         for contours in contour_levels:
             for contour in contours:
-                contour[:,0] = contour[:,0]/self.xsamples*w
-                contour[:,1] = contour[:,1]/self.ysamples*h
+                contour[:,0] = contour[:,0]/self.xsamples*surface.width
+                contour[:,1] = contour[:,1]/self.ysamples*surface.height
 
         for level in range(len(contour_levels)-1):
             col = list(np.random.rand(3,1))
@@ -93,9 +93,9 @@ class TopoRenderer(BaseRenderer):
                 #if (summed < 0):
                     # counter-clockwise. We need to put an outer square
                     #cx.move_to(0,0)
-                    #cx.line_to(0,h)
-                    #cx.line_to(w,h)
-                    #cx.line_to(w,0)
+                    #cx.line_to(0,surface.height)
+                    #cx.line_to(surface.width,surface.height)
+                    #cx.line_to(surface.width,0)
                 cx.set_source_rgb(0, 0, 0)
                 #cx.stroke_preserve()
             for contour in contour_levels[level+1]:

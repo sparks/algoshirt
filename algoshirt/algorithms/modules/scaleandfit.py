@@ -4,41 +4,36 @@ import cairo
 
 class ScaleAndFit(BaseModule):
 
-	default_params = {
-		"scale":
-			{
-				"value": False,
-				"type": "bool",
-				"automate": False
-			}
-	}
+    default_params = {
+        "scale":
+            {
+                "value": False,
+                "type": "bool",
+                "automate": False
+            }
+    }
 
-	def __init__(self, params):
-	    super(ScaleAndFit, self).__init__(params)
+    def __init__(self, params=None):
+        super(ScaleAndFit, self).__init__(params)
+        if self.params == None:
+            self.params = ScaleAndFit.default_params
 
-    def render(self, input_surfaces, input_shapes, output_surfaces):
+    def render(self, surface_in, surface_out):
+        cr = cairo.Context(surface_out.surface)
 
-    	# output = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image.get_width(), self.image.get_height())
+        corrected_ratio = 1
 
-    	# cr = cairo.Context(output)
-    	# cr.set_source_surface(self.image, 0, 0)
-    	# cr.paint()
+        if self.params["scale"]["value"]:
+            ar_in = surface_in.width/surface_in.height
+            ar_out = surface_out.width/surface_out.height
 
-    	# ar_shirt = self.w/self.h
-    	# ar_design = surface.get_width()/surface.get_height()
+            if ar_out < ar_in:
+                corrected_ratio = float(surface_out.width)/surface_in.width
+            else:    
+                corrected_ratio = float(surface_out.height)/surface_in.height
 
-    	# corrected_ratio = 1
+        cr.translate(surface_out.width/2-surface_in.width/2*corrected_ratio, surface_out.height/2-surface_in.height/2*corrected_ratio)
+        cr.scale(corrected_ratio, corrected_ratio)
 
-    	# if ar_shirt < ar_design:
-    	# 	corrected_ratio = self.w/surface.get_width()
-    	# 	cr.translate(self.x, self.y+(self.h-surface.get_height()*corrected_ratio)/2)
-    	# else:
-    	# 	corrected_ratio = self.h/surface.get_height()
-    	# 	cr.translate(self.x+(self.w-surface.get_width()*corrected_ratio)/2, self.y)
-
-    	# cr.scale(corrected_ratio, corrected_ratio)
-
-    	# cr.set_source_surface(surface, 0, 0)
-    	# cr.paint()
-
-    	# return output
+        cr.set_source_surface(surface_in.surface, 0, 0)
+        cr.paint()

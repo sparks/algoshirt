@@ -30,8 +30,8 @@ class RenderThread(threading.Thread):
 
         render.render_path_front = os.path.join(render.working_dir, "render.png")
 
-        random_render_instance = optimizers.randomize(renderers.BigPixels)
-        # random_render_instance = optimizers.randomize(renderers.FractalDots)
+        # random_render_instance = optimizers.randomize(renderers.BigPixels)
+        random_render_instance = optimizers.randomize(renderers.FractalDots)
         random_render_instance.render_to_png(
             os.path.join(g.renders_dir, render.render_path_front),
             700,
