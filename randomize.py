@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import argparse, os, json, uuid
 import algoshirt.optimizers as optimizers
-import algoshirt.algorithms.renders as renders
+import algoshirt.algorithms.renderers as renderers
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-uuid", type=str, default=str(uuid.uuid4()), help="(optional) uuid for this run")
@@ -12,12 +12,12 @@ base_filename = "random-optimizer-{0}".format(args.uuid)
 png_filename = os.path.join(args.renders_dir, "{0}.png".format(base_filename))
 json_filename = os.path.join(args.renders_dir, "{0}.json".format(base_filename))
 
-random_render_instance = optimizers.randomize(renders.FractalDots)
+random_render_instance = optimizers.randomize(renderers.TilesRenderer)
 
 random_render_instance.render_to_png(
 	png_filename,
-	2000,
-	2000
+	1000,
+	1000
 )
 
 params_file = open(json_filename, "w")

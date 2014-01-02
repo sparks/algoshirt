@@ -13,17 +13,15 @@ class ScaleAndFit(BaseModule):
             }
     }
 
-    def __init__(self, params=None):
+    def __init__(self, params = default_params):
         super(ScaleAndFit, self).__init__(params)
-        if self.params == None:
-            self.params = ScaleAndFit.default_params
 
     def render(self, surface_in, surface_out):
         cr = cairo.Context(surface_out.surface)
 
         corrected_ratio = 1
 
-        if self.params["scale"]["value"]:
+        if self.params["scale"]["value"] or surface_in.width > surface_out.width or surface_in.height > surface_out.height:
             ar_in = surface_in.width/surface_in.height
             ar_out = surface_out.width/surface_out.height
 

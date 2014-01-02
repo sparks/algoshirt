@@ -28,9 +28,10 @@ def rss_to_image_surface(num_images = 1, urls = None):
 
 	for feed in urls_feed:
 		for entry in feed['entries']:
-			soup = BeautifulSoup(entry['summary'])
-			if(soup.find("img") != None):
-				imageUrls.append(soup.find("img")["src"])
+			if "summary" in entry:
+				soup = BeautifulSoup(entry['summary'])
+				if(soup.find("img") != None):
+					imageUrls.append(soup.find("img")["src"])
 	
 	if num_images > len(imageUrls):
 		num_images = len(imageUrls)

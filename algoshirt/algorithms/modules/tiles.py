@@ -5,7 +5,7 @@
 #add offset
 #vary col and row size
 
-from ..util import webscrapper
+from algoshirt.util import webscrapper
 import cairo, math, colorsys, random
 
 def imageDrawRect(source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY):
@@ -163,7 +163,7 @@ class Tiles(object):
 				"min": 1,
 				"max": 30,
 				"automate": "true"
-			}
+			},
 		"shape":
 			{
 				"value": 0, # of list ['rect','circle']
@@ -171,7 +171,7 @@ class Tiles(object):
 				"min": 0,
 				"max": 1,
 				"automate": "true"
-			}
+			},
 		"randParDist":
 			{
 				"value": 0.5,
@@ -179,7 +179,7 @@ class Tiles(object):
 				"min": 0,
 				"max": 1,
 				"automate": "true"
-			}
+			},
 		"randParNum":
 			{
 				"value": 0.5,
@@ -190,13 +190,15 @@ class Tiles(object):
 			}
 		
 	}
+
+	shapes = ("rect", "circle")
 	
-	def __init__(self,params = Tiles.default_params):
+	def __init__(self, params = default_params):
 		self.params = params
 
 	def tiling(self):
 		images = webscrapper.rss_to_image_surface()
-		image = cairo.ImageSurface.create_from_png(images[random.randint(0,len(images)-1)])
+		image = images[random.randint(0,len(images)-1)]
 
 		width = image.get_width()
 		height = image.get_height()
@@ -207,11 +209,12 @@ class Tiles(object):
 		maxRows = self.params["rows"]["max"]
 		destWidth = 1000
 		destHeight = 1000
-	
+		shape = Tiles.shapes[self.params["shape"]["value"]]
+
 		ps = cairo.ImageSurface(cairo.FORMAT_ARGB32, destWidth, destHeight)
 		cr = cairo.Context(ps)
 	
-		if(shape =='rect'):
+		if(shape == 'rect'):
 			width = image.get_width()/cols
 			height = image.get_height()/rows
 			border = random.randint(0,10)
@@ -238,16 +241,16 @@ class Tiles(object):
 		shuffler = Shuffler(random.random(), random.random())	
 		shuffleGrid(grid, shuffler)
 
-		# print "grid", grid
+		print "grid", grid
 	
 		if (shape =='rect'):
-				for i in range(cols):
-					for j in range (rows):
-						# if i < j/(random.randint(1,4)) or j < i/(random.randint(1,2)):
-						# x = random.random()
-						# 		if x > 0.5:
-							imageDrawRect(image, grid[i][j][0]*width, grid[i][j][1]*height, width, height, 
-							i*(image.get_width()/cols)+(i+1)*border, j*(image.get_height()/rows)+(j+1)*border)
+			for i in range(cols):
+				for j in range (rows):
+					# if i < j/(random.randint(1,4)) or j < i/(random.randint(1,2)):
+					# x = random.random()
+					# 		if x > 0.5:
+					imageDrawRect(image, grid[i][j][0]*width, grid[i][j][1]*height, width, height, 
+					i*(image.get_width()/cols)+(i+1)*border, j*(image.get_height()/rows)+(j+1)*border)
 	
 		if (shape == 'circle'):
 			for i in range(cols):
