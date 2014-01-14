@@ -5,49 +5,55 @@
 #add offset
 #vary col and row size
 
+# PROBLEMS
+# verify aiguillage for the foreign tiles
+
 from algoshirt.util import webscrapper
 import cairo, math, colorsys, random
 
-def imageDrawRect(source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY):
-	here = cr.get_matrix()
-	cr.translate(destX-sourceX, destY-sourceY)
-	cr.rectangle(sourceX,sourceY,sourceWidth,sourceHeight)
-	cr.set_source_surface(source, 0, 0)
-	cr.fill()
-	cr.set_matrix(here)
+def imageDrawRect(ctx, source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY):
+	here = ctx.get_matrix()
+	ctx.translate(destX-sourceX, destY-sourceY)
+	ctx.rectangle(sourceX,sourceY,sourceWidth,sourceHeight)
+	ctx.set_source_surface(source, 0, 0)
+	ctx.fill()
+	ctx.set_matrix(here)
 
-def imageDrawCircle(source, sourceX, sourceY, rad, destX, destY):
-	here = cr.get_matrix()
-	cr.translate(destX-sourceX, destY-sourceY)
-	cr.arc(sourceX+rad, sourceY+rad, rad, 0, 2*math.pi)
-	cr.set_source_surface(source, 0, 0)
-	cr.fill()
-	cr.set_matrix(here)
+def imageDrawCircle(ctx, source, sourceX, sourceY, rad, destX, destY):
+	here = ctx.get_matrix()
+	ctx.translate(destX-sourceX, destY-sourceY)
+	ctx.arc(sourceX+rad, sourceY+rad, rad, 0, 2*math.pi)
+	ctx.set_source_surface(source, 0, 0)
+	ctx.fill()
+	ctx.set_matrix(here)
 	
-def colorDrawRect(source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY):
-	here = cr.get_matrix()
-	cr.translate(destX-sourceX, destY-sourceY)
-	cr.rectangle(sourceX,sourceY,sourceWidth,sourceHeight)
-	cr.set_source_rgb(0, 0, 0)
-	cr.fill()
-	cr.set_matrix(here)
+def colorDrawRect(ctx, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY):
+	r = 1
+	g = 0
+	b = 0
+	here = ctx.get_matrix()
+	ctx.translate(destX-sourceX, destY-sourceY)
+	ctx.rectangle(sourceX,sourceY,sourceWidth,sourceHeight)
+	ctx.set_source_rgb(r, g, b)
+	ctx.fill()
+	ctx.set_matrix(here)
 
-def colorDrawCircle(rad, destX, destY):
-	here = cr.get_matrix()
-	cr.translate(destX, destY)
-	cr.arc(rad, rad, rad, 0, 2*math.pi)
-	cr.set_source_rgb(random.random(), random.random(), random.random())
-	cr.fill()
-	cr.set_matrix(here)
+def colorDrawCircle(ctx, rad, destX, destY):
+	here = ctx.get_matrix()
+	ctx.translate(destX, destY)
+	ctx.arc(rad, rad, rad, 0, 2*math.pi)
+	ctx.set_source_rgb(random.random(), random.random(), random.random())
+	ctx.fill()
+	ctx.set_matrix(here)
 
 class Shuffler(object):
-	def __init__(self, randParDist, randParNum):
-		self.randParDist = randParDist
-		self.randParNum = randParNum
+	def __init__(self, rand_par_dist, rand_par_num):
+		self.rand_par_dist = rand_par_dist
+		self.rand_par_num = rand_par_num
 		
 	def shuffleFn(self, grid, originTuple):
-		randPar = self.randParDist
-		if random.random() <= self.randParNum:
+		randPar = self.rand_par_dist
+		if random.random() <= self.rand_par_num:
 			if ((len(grid) < 5 and len(grid[0]) < 5) or (len(grid) < 3 or len(grid[0]) < 3)):
 				x = random.choice([0,1])
 				if x == 0:
@@ -154,7 +160,7 @@ class Tiles(object):
 				"type": "int",
 				"min": 1,
 				"max": 30,
-				"automate": "true"
+				"automate": True
 			},
 		"rows":
 			{
@@ -162,7 +168,7 @@ class Tiles(object):
 				"type": "int",
 				"min": 1,
 				"max": 30,
-				"automate": "true"
+				"automate": True
 			},
 		"shape":
 			{
@@ -170,35 +176,134 @@ class Tiles(object):
 				"type": "int",
 				"min": 0,
 				"max": 1,
-				"automate": "true"
+				"automate": True
 			},
-		"randParDist":
+		"rand_par_dist":
 			{
 				"value": 0.5,
 				"type": "float",
 				"min": 0,
 				"max": 1,
-				"automate": "true"
+				"automate": True
 			},
-		"randParNum":
+		"rand_par_num":
 			{
 				"value": 0.5,
 				"type": "float",
 				"min": 0,
 				"max": 1,
-				"automate": "true"
+				"automate": True
+			},
+		"holes":
+			{
+				"value": 0,
+				"type": "int",
+				"min": 0,
+				"max": 1,
+				"automate": True
+			},
+		"holes_fct":
+			{
+				"value": 0,
+				"type": "int",
+				"min": 0,
+				"max": 1,
+				"automate": True
+			},	
+		"color":
+			{
+				"value": 0,
+				"type": "int",
+				"min": 0,
+				"max": 1,
+				"automate": True
+			},
+		"color_fct":
+			{
+				"value": 1,
+				"type": "int",
+				"min": 0,
+				"max": 1,
+				"automate": False
+			},
+		"image":
+			{
+				"value": 0,
+				"type": "int",
+				"min": 0,
+				"max": 1,
+				"automate": True
+			},
+		"image_fct":
+			{
+				"value": 0,
+				"type": "int",
+				"min": 0,
+				"max": 1,
+				"automate": True
+			},
+		"foreign_random":
+			{
+				"value": 0,
+				"type": "float",
+				"min": 0,
+				"max": 1,
+				"automate": True
 			}
-		
-	}
+		}
 
-	shapes = ("rect", "circle")
+	shapes = ('rect', 'circle')
 	
 	def __init__(self, params = default_params):
 		self.params = params
+		self.bands_list = []
+	
+	def create_bands_list(self):
+		bands = []
+		for i in range(self.params["cols"]["value"]):
+			bands.append(random.randint(1,self.params["rows"]["value"]))
+		return bands
+			
+	def get_color(self):
+		color = [0,0,0]
+		return color
+	
+	def bands(self, x, y, type):
+		if y > self.bands_list[x-1]:
+			return True
+		else: return False
+	
+	def random_position(self,x,y,type):
+		a = self.params["foreign_random"]["value"]
+		r = random.uniform(0.1,1)
+		if r > a:
+			return True
+		else: return False
+					
+	def switch(self,x,y):
+		if self.params["holes_fct"]["value"] == 0:
+			if self.bands(x,y,"holes"):
+				return True
+		if self.params["holes_fct"]["value"] == 1:
+			if self.random_position(x,y,"holes"):
+				return True
+		if self.params["color_fct"]["value"] == 0:
+			if self.bands(x,y,"color"):
+				return True
+		if self.params["color_fct"]["value"] == 1:
+			if self.random_position(x,y,"color"):
+				return True
+		if self.params["image_fct"]["value"] == 0:
+			if self.bands(x,y,"image"):
+				return True
+		if self.params["image_fct"]["value"] == 1:
+			if self.random_position(x,y,"image"):
+				return True
 
 	def tiling(self):
 		images = webscrapper.rss_to_image_surface()
 		image = images[random.randint(0,len(images)-1)]
+		image2 = images[random.randint(0,len(images)-1)]
 
 		width = image.get_width()
 		height = image.get_height()
@@ -207,13 +312,11 @@ class Tiles(object):
 		rows = self.params["rows"]["value"]
 		maxCols = self.params["cols"]["max"]
 		maxRows = self.params["rows"]["max"]
-		destWidth = 1000
-		destHeight = 1000
+		destWidth = width
+		destHeight = height
 		shape = Tiles.shapes[self.params["shape"]["value"]]
-
-		ps = cairo.ImageSurface(cairo.FORMAT_ARGB32, destWidth, destHeight)
-		cr = cairo.Context(ps)
-	
+		print shape
+		
 		if(shape == 'rect'):
 			width = image.get_width()/cols
 			height = image.get_height()/rows
@@ -230,6 +333,8 @@ class Tiles(object):
 			destWidth = shapeWidth*cols+(cols+1)*border
 			destHeight = shapeWidth*rows+(rows+1)*border
 	
+		ps = cairo.ImageSurface(cairo.FORMAT_ARGB32, destWidth, destHeight)
+		cr = cairo.Context(ps)
 	
 		grid = []
 		#fill grid
@@ -242,16 +347,28 @@ class Tiles(object):
 		shuffler = Shuffler(random.random(), random.random())	
 		shuffleGrid(grid, shuffler)
 
-		print "grid", grid
+		# print "grid", grid
+		
+		if self.params["holes_fct"]["value"] == 1 or self.params["color_fct"]["value"] == 1 or self.params["image_fct"]["value"] == 1:
+			self.bands_list = self.create_bands_list()
 	
 		if (shape =='rect'):
 			for i in range(cols):
 				for j in range (rows):
-					# if i < j/(random.randint(1,4)) or j < i/(random.randint(1,2)):
-					# x = random.random()
-					# 		if x > 0.5:
-					imageDrawRect(image, grid[i][j][0]*width, grid[i][j][1]*height, width, height, 
-					i*(image.get_width()/cols)+(i+1)*border, j*(image.get_height()/rows)+(j+1)*border)
+					if self.params["holes"]["value"] == 1:
+						if self.switch(i,j):
+							continue
+					elif self.params["color"]["value"] == 1:
+						if self.switch(i,j):
+							colorDrawRect(cr, grid[i][j][0]*width, grid[i][j][1]*height, width, height, 
+							i*(image.get_width()/cols)+(i+1)*border, j*(image.get_height()/rows)+(j+1)*border)	
+					elif self.params["image"]["value"] == 1:
+						if self.switch(i,j):
+							imageDrawRect(cr,image, grid[i][j][0]*width, grid[i][j][1]*height, width, height, 
+							i*(image.get_width()/cols)+(i+1)*border, j*(image.get_height()/rows)+(j+1)*border)
+					else:
+						imageDrawRect(cr,image, grid[i][j][0]*width, grid[i][j][1]*height, width, height, 
+						i*(image.get_width()/cols)+(i+1)*border, j*(image.get_height()/rows)+(j+1)*border)
 	
 		if (shape == 'circle'):
 			for i in range(cols):
@@ -260,9 +377,9 @@ class Tiles(object):
 					# if j < i:
 					x = random.random()
 					if x > 0.3:
-						imageDrawCircle(image, grid[i][j][0]*shapeWidth, grid[i][j][1]*shapeWidth, shapeWidth/2, 
+						imageDrawCircle(cr,image, grid[i][j][0]*shapeWidth, grid[i][j][1]*shapeWidth, shapeWidth/2, 
 						i*shapeWidth+(i+1)*border, j*shapeWidth+(j+1)*border)	
 					else:
-						colorDrawCircle(shapeWidth/2, i*shapeWidth+(i+1)*border, j*shapeWidth+(j+1)*border)
+						colorDrawCircle(cr, shapeWidth/2, i*shapeWidth+(i+1)*border, j*shapeWidth+(j+1)*border)
 
 		return ps

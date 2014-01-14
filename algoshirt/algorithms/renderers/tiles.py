@@ -1,4 +1,5 @@
 import algoshirt.algorithms.modules as modules
+from algoshirt.algorithms import SurfaceBundle
 from base import BaseRenderer
 
 class TilesRenderer(BaseRenderer):
@@ -10,7 +11,9 @@ class TilesRenderer(BaseRenderer):
 	
 	def render_to_surface(self, surface):
 		tiles = modules.Tiles(self.params)
+		print self.params
 		tiles_sur = tiles.tiling()
-
+		tiles_surB = SurfaceBundle(tiles_sur,tiles_sur.get_width(),tiles_sur.get_height())
+		
 		snf = modules.ScaleAndFit()
-		snf.render(tiles_sur, surface)
+		snf.render(tiles_surB, surface)
