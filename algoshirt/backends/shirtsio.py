@@ -4,6 +4,7 @@
 import os
 import json
 import requests
+from collections import defaultdict
 
 API_V1 = "https://www.shirts.io/api/v1"
 
@@ -55,6 +56,7 @@ class ShirtsIOBatch(object):
         fields["api_key"] = self.apikey
         fields["garment"] = []
         fields["addresses"] = []
+        international_count = defaultdict(int)
         for i, subscriber in enumerate(self.subscribers):
             garment = {}
             garment["product_id"] = self.product_id
@@ -69,6 +71,8 @@ class ShirtsIOBatch(object):
             address["address2"] = subscriber.address2
             address["city"] = subscriber.city
             address["state"] = subscriber.state
+            if subscriber.country != "US":
+                international_count[subscriber.country] = international_count[subscriber.country]+1
             address["country"] = subscriber.country
             address["zipcode"] = subscriber.postcode
             fields["addresses"].append(address)
@@ -82,22 +86,30 @@ class ShirtsIOBatch(object):
         }
 
         fields["address_count"] = len(self.subscribers)
-        fields["international_garments"] = {"CA": len(self.subscribers)}
+        fields["international_garments"] = {}
+        for key, val in international_count.iteritems():
+            fields["international_garments"][key] = val
 
         return fields
 
     def quote(self):
         fields = self.build_request()
+        print(fields)
         r = requests.get(API_V1 + "/quote", params=shirtsio_encode(fields))
+        print(r.status_code)
+        print(r.text)
         return json.loads(r.text).get("result")
 
     def order(self, quote, test=True):
         fields = self.build_request()
+
         fields["test"] = test
         fields["price"] = quote["total"]
 
+        print(fields)
         r = requests.post(API_V1 + "/order/",
                 files = {"print[front][artwork]": open(self.front_file, 'rb'), "print[front][proof]": open(self.proof_file, 'rb')},
-                data = shirtsio_encode(fields))
-
+                data  = shirtsio_encode(fields))
+        print(r.status_code)
+        print(r.text)
         return json.loads(r.text)

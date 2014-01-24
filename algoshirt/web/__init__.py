@@ -31,7 +31,8 @@ class RenderThread(threading.Thread):
         render.render_path_front = os.path.join(render.working_dir, "render.png")
 
         # random_render_instance = optimizers.randomize(renderers.BigPixels)
-        random_render_instance = optimizers.randomize(renderers.FractalDots)
+        # random_render_instance = optimizers.randomize(renderers.FractalDots)
+        random_render_instance = optimizers.randomize(renderers.TilesRenderer)
         random_render_instance.render_to_png(
             os.path.join(g.renders_dir, render.render_path_front),
             700,
@@ -175,9 +176,9 @@ class Orders(object):
                     session.query(Subscriber).all(),
                     qualified_render_path_front,
                     qualified_proof_path_front,
-                    "As large as possible",
+                    "",
                     "Centered",
-                    "black",
+                    "White",
                     11,
                     1
                 )
@@ -197,9 +198,9 @@ class Orders(object):
                     session.query(Subscriber).all(),
                     qualified_render_path_front,
                     qualified_proof_path_front,
-                    "As large as possible",
+                    "",
                     "Centered",
-                    "black",
+                    "White",
                     11,
                     1
                 )
@@ -327,7 +328,7 @@ def serve(config, apikey):
 
     g.model = AlgoshirtModel(g.application.config["Database"]["url"])
     g.renders_dir = g.application.config["Render"]["dir"]
-    g.proofer = ShirtProof(g.application.config["Proof"]["path"], 182, 150, 215, 300)
+    g.proofer = ShirtProof(g.application.config["Proof"]["path"], 188, 145, 215, 250)
     
     api = API()
     api.subscribers = Subscribers()

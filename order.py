@@ -17,9 +17,9 @@ if __name__ == "__main__":
 	batch = ShirtsIOBatch(
 		args.apikey,
 		session.query(Subscriber).all(), 
-		"./renders/test.png", 
-		"./renders/test.jpg", 
-		"As large as possible", 
+		"./test.png",
+		"./test.jpg",
+		"As large as possible",
 		"Centered",
 		"black", 
 		11, 
